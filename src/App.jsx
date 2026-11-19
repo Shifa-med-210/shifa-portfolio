@@ -1,0 +1,29 @@
+import React,{useEffect,useRef} from 'react';
+import gsap from 'gsap';
+import {ScrollTrigger} from 'gsap/ScrollTrigger';
+import Lenis from '@studio-freight/lenis';
+import {ArrowUpRight,ArrowDownRight,MoveDown} from 'lucide-react';
+gsap.registerPlugin(ScrollTrigger);
+const projects=[{num:'01',name:'SEWNEX',type:'BOUTIQUE MANAGEMENT / ERP',tag:'PRODUCT DESIGN',theme:'mint',desc:'Making complex boutique operations feel effortless.'},{num:'02',name:'NEX PEOPLE',type:'HR MANAGEMENT / SAAS',tag:'UX / DASHBOARDS',theme:'violet',desc:'Connecting people, processes and everyday work.'},{num:'03',name:'SALONEX',type:'SALON MANAGEMENT / SAAS',tag:'WEB / MOBILE',theme:'peach',desc:'A more intuitive way to manage salon experiences.'}];
+export default function App(){
+ const root=useRef(null);
+ useEffect(()=>{
+  const lenis=new Lenis({duration:1.2,smoothWheel:true});
+  let raf;const tick=(time)=>{lenis.raf(time);raf=requestAnimationFrame(tick)};raf=requestAnimationFrame(tick);
+  const onScroll=()=>ScrollTrigger.update();lenis.on('scroll',onScroll);
+  const ctx=gsap.context(()=>{
+   gsap.from('.hero .rise',{y:100,opacity:0,stagger:.13,duration:1.2,ease:'power4.out',delay:.15});
+   gsap.utils.toArray('.reveal').forEach(el=>gsap.from(el,{scrollTrigger:{trigger:el,start:'top 88%',once:true},y:70,opacity:0,duration:1.1,ease:'power3.out'}));
+   gsap.utils.toArray('.project').forEach(el=>gsap.from(el,{scrollTrigger:{trigger:el,start:'top 90%',once:true},y:100,opacity:0,duration:1,ease:'power3.out'}));
+   gsap.to('.marquee-track',{xPercent:-50,duration:22,repeat:-1,ease:'none'});
+  },root);
+  return()=>{cancelAnimationFrame(raf);lenis.destroy();ctx.revert();ScrollTrigger.getAll().forEach(s=>s.kill())};
+ },[]);
+ const go=id=>document.getElementById(id)?.scrollIntoView({behavior:'smooth'});
+ return <div ref={root} id="top" className="site"><header className="nav shell"><button className="logo" onClick={()=>go('top')}>SHIFA<span>✳</span></button><div className="nav-links"><button onClick={()=>go('work')}>WORK <span>↗</span></button><button onClick={()=>go('about')}>ABOUT <span>↗</span></button><button onClick={()=>go('contact')}>CONTACT <span>↗</span></button></div><div className="availability"><i/> OPEN TO OPPORTUNITIES</div></header>
+ <main><section className="hero shell"><div className="hero-meta rise"><span>INDEPENDENT THINKER.<br/>DIGITAL DESIGNER.</span><span>KERALA, INDIA · 2026</span></div><h1><span className="rise">MAKING</span><span className="rise outline">COMPLEX</span><span className="rise">FEEL <em>SIMPLE.</em></span></h1><div className="hero-bottom rise"><p>HEY, I'M SHIFA — A UI/UX DESIGNER CREATING THOUGHTFUL DIGITAL EXPERIENCES FOR THE REAL WORLD.</p><button className="round-arrow" aria-label="Explore selected work" onClick={()=>go('work')}><MoveDown size={25}/></button><span>SCROLL TO EXPLORE<br/>↓</span></div><div className="hero-orbit" aria-hidden="true">✳</div></section>
+ <section className="ticker"><div className="marquee-track">{Array.from({length:4},(_,i)=><span key={i}>DESIGN WITH INTENTION <b>✳</b> BUILD WITH CURIOSITY <b>✳</b> </span>)}</div></section>
+ <section id="work" className="work shell"><div className="section-heading reveal"><div><span className="eyebrow">/ 01 — PORTFOLIO</span><h2>SELECTED<br/><em>WORK.</em></h2></div><p>EXPLORING COMPLEX SYSTEMS, SIMPLIFYING EVERYDAY TASKS, AND MAKING THE DIGITAL FEEL HUMAN.</p></div><div className="projects">{projects.map(p=><article className={'project '+p.theme} key={p.num} tabIndex="0"><div className="project-image"><div className="mock-window"><div className="mock-top"><span>✳ {p.name}</span><span>● ● ●</span></div><div className="mock-layout"><div className="mock-sidebar"><i/><i/><i/><i/></div><div className="mock-main"><div className="mock-heading"/><div className="mock-cards"><i/><i/><i/></div><div className="mock-chart"><span/><span/><span/><span/><span/><span/><span/></div></div></div></div><div className="project-overprint">{p.name}</div><div className="project-icon"><ArrowUpRight/></div></div><div className="project-info"><span>{p.num} / {p.tag}</span><h3>{p.name}</h3><p>{p.type}</p></div></article>)}</div><p className="placeholder-note reveal">Project previews are conceptual placeholders. Detailed case studies coming soon.</p></section>
+ <section id="about" className="about"><div className="shell"><div className="about-top reveal"><span className="eyebrow">/ 02 — A LITTLE ABOUT ME</span><span>DESIGN IS HOW I MAKE SENSE OF THINGS.</span></div><div className="about-grid"><h2 className="reveal">CURIOUS<br/>BY <em>NATURE.</em><br/>DESIGNER<br/>BY <em>CHOICE.</em></h2><div className="about-copy reveal"><span className="asterisk">✳</span><p>I'M SHIFA, A UI/UX DESIGNER WITH 1+ YEARS OF EXPERIENCE WORKING ON SAAS PRODUCTS, ERP PLATFORMS, DASHBOARDS, WEBSITES AND MOBILE APPS.</p><p>I ENJOY TURNING COMPLICATED WORKFLOWS INTO CLEAR, INTUITIVE EXPERIENCES — ONE THOUGHTFUL DECISION AT A TIME.</p><div className="skills"><span>UX STRATEGY</span><span>PRODUCT DESIGN</span><span>PROTOTYPING</span><span>DESIGN SYSTEMS</span></div></div></div></div></section>
+ <section id="contact" className="contact shell"><div className="contact-top reveal"><span className="eyebrow">/ 03 — WHAT'S NEXT?</span><span>HAVE A GOOD IDEA? LET'S TALK.</span></div><h2 className="reveal">LET'S MAKE<br/><em>IT MATTER.</em><span>✳</span></h2><div className="contact-bottom reveal"><p>OPEN TO DESIGN OPPORTUNITIES,<br/>COLLABORATIONS & INTERESTING CONVERSATIONS.</p><a href="https://github.com/Shifa-med-210" target="_blank" rel="noreferrer">FIND ME ON GITHUB <ArrowUpRight size={24}/></a></div></section></main><footer className="footer shell"><span>© {new Date().getFullYear()} SHIFA AHAMMED</span><span>DESIGNED WITH INTENTION ✳</span><button onClick={()=>go('top')}>BACK TO TOP ↑</button></footer></div>
+}
